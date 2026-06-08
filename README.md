@@ -6,8 +6,10 @@
 
 - Маскирование номеров счетов
 - Маскирование номеров банковских карт
-- Написано на Python 3.8+
-Полное покрытие тестами
+- Фильтрация операций по статусу
+- Сортировка операций по дате
+- Написано на Python 3.13+
+- Полное покрытие тестами
 
 ## Установка
 
@@ -22,17 +24,20 @@ pip install bank-operations
 ## Быстрый старт
 
 ```python
-from src.masks import mask_account_number, mask_card_number
-
-# Маскирование номера счета
-account = "123456789012"
-masked_account = mask_account_number(account)
-print(f"Счет: {masked_account}")  # Счет: **9012
-
 # Маскирование номера карты
 card = "1234567812345678"
-masked_card = mask_card_number(card)
+masked_card = get_mask_card_number(card)
 print(f"Карта: {masked_card}")  # Карта: 1234 56** **** 5678
+
+# Фильтрация операций по статусу
+operations = [
+    {'id': 1, 'state': 'EXECUTED', 'date': '2024-01-10'},
+    {'id': 2, 'state': 'CANCELED', 'date': '2024-01-15'},
+]
+executed = filter_by_state(operations)  # Только EXECUTED
+
+# Сортировка операций по дате
+sorted_ops = sort_by_date(operations)  # Сначала новые8
 ```
 
 ## Тестирование
@@ -52,15 +57,21 @@ python -m unittest tests.test_masks.TestMasks.test_mask_account_number
 
 ```
 bank_operations/
-├── src/
-│   └── masks/
-│       ├── __init__.py
-│       └── masks.py
-├── tests/
+├── src/                    
 │   ├── __init__.py
-│   └── test_masks.py
-├── pyproject.toml
-├── .flake8
+│   ├── masks.py           
+│   ├── processing.py      
+│   ├── widget.py          
+│   └── main.py            
+├── tests/                  
+│   ├── __init__.py
+│   ├── test_masks.py
+│   ├── test_processing.py
+│   └── test_widget.py
+├── .flake8                 
+├── .gitignore
+├── poetry.lock
+├── pyproject.toml          
 └── README.md
 ```
 
@@ -84,4 +95,4 @@ flake8 src tests
 
 ## Лицензия
 
-MIT License. Смотрите LICENSE файл для деталей.
+MIT License. 
